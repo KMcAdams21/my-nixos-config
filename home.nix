@@ -4,6 +4,7 @@
   home.username = "km";
   home.homeDirectory = "/home/km";
   home.stateVersion = "25.11"; # Make sure this matches your NixOS version
+  home-manager.backupFileExtension = "bak";
 
   # Import individual Home Manager modules for specific applications/services
   imports = [
