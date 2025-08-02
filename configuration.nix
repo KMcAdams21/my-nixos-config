@@ -130,10 +130,9 @@ nix = {
     extraCompatPackages = [ pkgs.proton-ge-bin ]; # Include proton compatility
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
 	# enable video drivers
