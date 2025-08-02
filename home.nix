@@ -26,6 +26,18 @@
 		};
 	};
 
+  programs.bash = {
+    enable = true;
+  };
+
+  programs.readline = {
+    enable = true;
+    extraConfig = ''
+      "\e[A": history-search-backward
+      "\e[B": history-search-forward
+    '';
+  };
+
   # Enable the SSH client and agent for your user through Home Manager
   programs.ssh.enable = true;
 
