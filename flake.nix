@@ -13,6 +13,9 @@
 			modules = [
 				./configuration.nix
 				home-manager.nixosModules.home-manager
+				{
+					home-manager.users.km = import ./home.nix;
+				}
 			];
 		};
 	};
