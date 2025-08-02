@@ -118,6 +118,24 @@ nix = {
 	xclip
   ];
 
+  # Steam settings
+  programs.steam = {
+    enable = true;
+
+    # Enable all optional firewall ports for Steam features
+    remotePlay.openFirewall = true;         # For Steam Remote Play
+    dedicatedServer.openFirewall = true;    # For Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # For local game transfers
+    gamescopeSession.enable = true;
+    extraCompatPackages = [ pkgs.proton-ge-bin ]; # Include proton compatility
+  };
+
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
 	# enable video drivers
 	services.xserver.videoDrivers = [ "nvidia" ];
 	hardware.nvidia.powerManagement.enable = true;
