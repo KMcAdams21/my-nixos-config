@@ -14,6 +14,18 @@
     };
   };
 
+	programs.vscode = {
+		enable = true;
+		profiles.default = {
+			extensions = with pkgs.vscode-extensions; [
+				enkia.tokyo-night
+			];
+			userSettings = {
+				"workbench.colorTheme" = "Tokyo Night";
+			};
+		};
+	};
+
   # Enable the SSH client and agent for your user through Home Manager
   programs.ssh.enable = true;
 
