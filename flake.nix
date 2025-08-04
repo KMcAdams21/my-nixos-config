@@ -14,7 +14,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }: {
+  outputs = { self, nixpkgs, home-manager, firefox-addons, ... }: {
     nixosConfigurations.my-basic-nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
