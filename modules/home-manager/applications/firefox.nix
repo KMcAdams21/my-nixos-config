@@ -1,4 +1,4 @@
-# ./modules/home-manager/applications/firefox.nix (using NUR)
+# ./modules/home-manager/applications/firefox.nix
 { config, pkgs, ... }:
 
 {
@@ -8,10 +8,13 @@
       settings = {
         "browser.startup.page" = 3;
         "browser.startup.homepage" = "https://nixos.org";
+
+        # Enable native vertical tabs.
+        "sidebar.revamp" = true;
+        "sidebar.verticalTabs" = true;
       };
 
       extensions = {
-        # This is now much cleaner!
         packages = with pkgs.nur.repos.rycee.firefox-addons; [
           violentmonkey
         ];
