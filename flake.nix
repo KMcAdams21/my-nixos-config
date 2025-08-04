@@ -8,29 +8,24 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    firefox-addons = {
-      url = "github:NixOS/nixpkgs/nixos-unstable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nur.url = "github:nix-community/NUR";
   };
 
-  outputs = { self, nixpkgs, home-manager, firefox-addons, ... }: {
+  outputs = { self, nixpkgs, home-manager, nur, ... }: {
     nixosConfigurations.my-basic-nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-		{ nixpkgs.config.allowUnfree = true; }
+        ({
+          nixpkgs.overlays = [ nur.overlays.default ];
+        })
+		    { nixpkgs.config.allowUnfree = true; }
         
-		./configuration.nix
+		    ./configuration.nix
     
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.backupFileExtension = "bak";
-          home-manager.users.km = {
-            imports = [ ./home.nix ];
-            _module.args = {
-              inherit (firefox-addons) firefox-addons;
-            };
-          };
+          home-manager.users.km = import ./home.nix;
         }
       ];
     };
