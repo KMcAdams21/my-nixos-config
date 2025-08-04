@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firefox-addons = {
+      url = "github:NixOS/nixpkgs/nixos-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, ... }: {
@@ -21,7 +25,12 @@
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.backupFileExtension = "bak";
-          home-manager.users.km = import ./home.nix;
+          home-manager.users.km = {
+            imports = [ ./home.nix ];
+            _module.args = {
+              inherit (firefox-addons) firefox-addons;
+            };
+          };
         }
       ];
     };
