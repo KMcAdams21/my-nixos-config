@@ -16,6 +16,7 @@
     ./modules/home-manager/applications/git.nix
     ./modules/home-manager/applications/vscode.nix
     ./modules/home-manager/applications/firefox.nix
+    ./modules/home-manager/applications/dolphin.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
