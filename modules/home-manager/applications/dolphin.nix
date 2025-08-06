@@ -26,10 +26,8 @@
     ShowMem = False
     ShowFrameCount = False
     GFXBackend = Vulkan
-
-    [Graphics]
     InternalResolution = 3
-    MaxAnistropy = 16
+    MaxAnisotropy = 16
     AntiAliasing = 4
 
     [Hotkeys]
@@ -37,8 +35,8 @@
     LoadStateSlot1 = F1
     ToggleFullscreen = Alt+Return
     TogglePause = Space
+  '';
 
-  # Manage the GameCube controller configuration for a PS4 controller
   xdg.configFile."dolphin-emu/Config/GCPadNew.ini".text = ''
     [Profile]
     Device = SDL/0/PLAYSTATION(R)4 Controller
@@ -78,8 +76,8 @@
     Triggers/R = `Trigger R` # R2 on PS4
     Triggers/L-Analog = `Trigger L`
     Triggers/R-Analog = `Trigger R`
-  '';
 
+  # Manage the GameCube controller configuration for player 2
   xdg.configFile."dolphin-emu/Config/GCPadNew_2.ini".text = ''
     [Profile]
     Device = SDL/1/PLAYSTATION(R)4 Controller
