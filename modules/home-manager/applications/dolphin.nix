@@ -37,7 +37,7 @@
     TogglePause = Space
   '';
 
-  xdg.configFile."dolphin-emu/Config/GCPadNew.ini".text = ''
+  xdg.configFile."dolphin-emu/Config/PS4-1.ini".text = ''
     [Profile]
     Device = SDL/0/PLAYSTATION(R)4 Controller
     
@@ -78,7 +78,7 @@
     Triggers/R-Analog = `Trigger R`
   '';
 
-  xdg.configFile."dolphin-emu/Config/GCPadNew_2.ini".text = ''
+  xdg.configFile."dolphin-emu/Config/PS4-2.ini".text = ''
     [Profile]
     Device = SDL/1/PLAYSTATION(R)4 Controller
 
