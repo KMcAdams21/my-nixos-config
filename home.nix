@@ -6,6 +6,7 @@
   home.stateVersion = "25.11"; # Make sure this matches your NixOS version
 
   home.packages = with pkgs; [
+    spotify
     discord
   ];
 
@@ -15,7 +16,6 @@
     ./modules/home-manager/applications/git.nix
     ./modules/home-manager/applications/vscode.nix
     ./modules/home-manager/applications/firefox.nix
-    ./modules/home-manager/applications/spotify.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
