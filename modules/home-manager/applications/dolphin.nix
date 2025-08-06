@@ -76,8 +76,8 @@
     Triggers/R = `Trigger R` # R2 on PS4
     Triggers/L-Analog = `Trigger L`
     Triggers/R-Analog = `Trigger R`
+  '';
 
-  # Manage the GameCube controller configuration for player 2
   xdg.configFile."dolphin-emu/Config/GCPadNew_2.ini".text = ''
     [Profile]
     Device = SDL/1/PLAYSTATION(R)4 Controller
