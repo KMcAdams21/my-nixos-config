@@ -10,8 +10,6 @@
     discord
   ];
 
-  programs.noisetorch.enable = true;
-
   # Import individual Home Manager modules for specific applications/services
   imports = [
     # Applications

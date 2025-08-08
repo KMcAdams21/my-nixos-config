@@ -102,6 +102,7 @@
     # wget
     git
     xclip
+    noisetorch
   ];
 
   # Open ports in the firewall.
