@@ -37,77 +37,82 @@
     TogglePause = Space
   '';
 
-  xdg.configFile."dolphin-emu/Config/GCPadNew.ini".text = ''
+  
+  # This configuration creates a profile for Player 1 (PS4-1.ini)
+  # It is now placed in the Profiles/GCPad subdirectory as you discovered
+  xdg.configFile."dolphin-emu/Profiles/GCPad/PS4-1.ini".text = ''
     [Profile]
-    Device = SDL/0/PLAYSTATION(R)4 Controller
+    # This is the device name you provided
+    Device = SDL/0/PS4 Controller
     
-    # D-Pad
+    # D-Pad mappings
     D-Pad/Up = `Pad N`
     D-Pad/Down = `Pad S`
     D-Pad/Left = `Pad W`
     D-Pad/Right = `Pad E`
     
-    # Face Buttons
-    Buttons/A = `Button B` # Cross on PS4
-    Buttons/B = `Button A` # Circle on PS4
-    Buttons/X = `Button Y` # Triangle on PS4
-    Buttons/Y = `Button X` # Square on PS4
-    Buttons/Z = `Shoulder R` # R1 on PS4
-    Buttons/Start = Start # Options/Start button on PS4
+    # Face Button mappings
+    Buttons/A = `Button S`
+    Buttons/B = `Button E`
+    Buttons/X = `Button W`
+    Buttons/Y = `Button N`
+    Buttons/Start = Start
 
     # Main Stick (Left Analog Stick on PS4)
-    Main Stick/Radius = 60.000000000000000
-    Main Stick/Dead Zone = 12.000000000000000
+    # The calibration lines have been removed for standard behavior
     Main Stick/Up = `Left Y+`
     Main Stick/Down = `Left Y-`
     Main Stick/Left = `Left X-`
     Main Stick/Right = `Left X+`
 
     # C-Stick (Right Analog Stick on PS4)
-    C-Stick/Radius = 65.000000000000000
-    C-Stick/Dead Zone = 17.000000000000000
+    # The calibration lines have also been removed here
     C-Stick/Up = `Right Y+`
     C-Stick/Down = `Right Y-`
     C-Stick/Left = `Right X-`
     C-Stick/Right = `Right X+`
 
-    # Triggers (L2 and R2 on PS4)
-    Triggers/L = `Trigger L` # L2 on PS4
-    Triggers/R = `Trigger R` # R2 on PS4
+    # Trigger mappings
+    Triggers/L = `Trigger L`
+    Triggers/R = `Trigger R`
     Triggers/L-Analog = `Trigger L`
     Triggers/R-Analog = `Trigger R`
   '';
 
-  xdg.configFile."dolphin-emu/Config/GCPadNew_2.ini".text = ''
+  # This configuration creates a profile for Player 2 (PS4-2.ini)
+  # It is also placed in the Profiles/GCPad subdirectory
+  xdg.configFile."dolphin-emu/Profiles/GCPad/PS4-2.ini".text = ''
     [Profile]
-    Device = SDL/1/PLAYSTATION(R)4 Controller
+    # This is for the second controller
+    Device = SDL/1/PS4 Controller
 
+    # D-Pad mappings
     D-Pad/Up = `Pad N`
     D-Pad/Down = `Pad S`
     D-Pad/Left = `Pad W`
     D-Pad/Right = `Pad E`
     
-    Buttons/A = `Button B`
-    Buttons/B = `Button A`
-    Buttons/X = `Button Y`
-    Buttons/Y = `Button X`
+    # Face Button mappings
+    Buttons/A = `Button E`
+    Buttons/B = `Button S`
+    Buttons/X = `Button W`
+    Buttons/Y = `Button N`
     Buttons/Z = `Shoulder R`
     Buttons/Start = Start
 
-    Main Stick/Radius = 60.000000000000000
-    Main Stick/Dead Zone = 12.000000000000000
+    # Main Stick (Left Analog Stick on PS4)
     Main Stick/Up = `Left Y+`
     Main Stick/Down = `Left Y-`
     Main Stick/Left = `Left X-`
     Main Stick/Right = `Left X+`
 
-    C-Stick/Radius = 65.000000000000000
-    C-Stick/Dead Zone = 17.000000000000000
+    # C-Stick (Right Analog Stick on PS4)
     C-Stick/Up = `Right Y+`
     C-Stick/Down = `Right Y-`
     C-Stick/Left = `Right X-`
     C-Stick/Right = `Right X+`
 
+    # Trigger mappings
     Triggers/L = `Trigger L`
     Triggers/R = `Trigger R`
     Triggers/L-Analog = `Trigger L`
