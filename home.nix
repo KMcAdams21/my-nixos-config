@@ -10,6 +10,8 @@
     discord
   ];
 
+  programs.noisetorch.enable = true;
+
   # Import individual Home Manager modules for specific applications/services
   imports = [
     # Applications
@@ -17,7 +19,6 @@
     ./modules/home-manager/applications/vscode.nix
     ./modules/home-manager/applications/firefox.nix
     ./modules/home-manager/applications/dolphin.nix
-    ./modules/home-manager/applications/noisetorch.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
