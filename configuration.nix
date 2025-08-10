@@ -10,7 +10,6 @@
     [
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./modules/home-manager/low_level/mullvad.nix
 
       # Import your new, separate modules
       ./modules/config/steam.nix
