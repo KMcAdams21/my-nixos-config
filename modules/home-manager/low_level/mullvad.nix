@@ -1,62 +1,71 @@
 /*
-  Mullvad VPN configuration for NixOS (WireGuard + Toggleable Kill Switch)
+  Mullvad VPN configuration for NixOS (WireGuard + Kill Switch)
 */
 { config, pkgs, lib, ... }:
 
 let
+  # The path to the private key file
   privateKeyFile = "/var/lib/mullvad/wg_private.key";
+  # The IP address assigned to your WireGuard interface
   wgAddress = "10.66.66.2/32";
+  # Mullvad's public key for the server
+  mullvadPublicKey = "<MULLVAD_PUBLIC_KEY>";
+  # Mullvad's WireGuard endpoint
   wgEndpoint = "sea-wireguard.mullvad.net:51820";
 in
 {
+  # WireGuard configuration
   networking.wireguard.interfaces.mullvad = {
-    address = [ wgAddress ];
+    # The IP addresses for the WireGuard interface.
+    addresses = [ wgAddress ];
+    # Path to the private key.
     privateKeyFile = privateKeyFile;
+    # WireGuard's listening port.
     listenPort = 51820;
-    peers = [ {
-      publicKey = "<MULLVAD_PUBLIC_KEY>";
-      allowedIPs = [ "0.0.0.0/0" "::/0" ];
-      endpoint = wgEndpoint;
-      persistentKeepalive = 25;
-    } ];
-  };
-
-  # Separate kill-switch service that can be started/stopped independently
-  systemd.services.mullvad-kill-switch = {
-    description = "Mullvad VPN kill switch (nftables)";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-    script = ''
-      # Flush existing rules
+    peers = [
+      {
+        # Mullvad's public key for the server.
+        publicKey = mullvadPublicKey;
+        # Routes all traffic through the VPN.
+        allowedIPs = [ "0.0.0.0/0" "::/0" ];
+        # The Mullvad WireGuard server endpoint.
+        endpoint = wgEndpoint;
+        # Keeps the connection alive by sending a packet every 25 seconds.
+        persistentKeepalive = 25;
+      }
+    ];
+    # Post-up and Post-down scripts for the kill switch.
+    # These rules are tightly coupled to the WireGuard interface's lifecycle.
+    postUp = ''
+      # Flush existing rules to start fresh
       nft flush ruleset
-
-      # Create filter table
+      # Create a filter table
       nft add table inet filter
-
-      # Input chain: allow loopback and established
-      nft add chain inet filter input { type filter hook input priority 0; }
+      # Add input chain with a drop policy by default
+      nft add chain inet filter input { type filter hook input priority 0; policy drop; }
+      # Add output chain with a drop policy by default
+      nft add chain inet filter output { type filter hook output priority 0; policy drop; }
+      # Input rules
       nft add rule inet filter input iifname lo accept
       nft add rule inet filter input ct state established,related accept
-      nft add rule inet filter input udp dport 51820 accept
-
-      # Output chain: drop all unless going out via wg interface
-      nft add chain inet filter output { type filter hook output priority 0; }
-      nft add rule inet filter output oifname "wg-mullvad" accept
-      nft add rule inet filter output drop
+      nft add rule inet filter input iifname "mullvad" accept
+      # Output rules
+      nft add rule inet filter output oifname lo accept
+      nft add rule inet filter output ct state established,related accept
+      nft add rule inet filter output oifname "mullvad" accept
     '';
-    wantedBy = [ "multi-user.target" ];
+    postDown = ''
+      # Flush all rules when the VPN goes down
+      nft flush ruleset
+    '';
   };
 
-  # Ensure WireGuard service and kill-switch start at boot (enable as needed)
-  systemd.services."wg-quick@wg-mullvad".wantedBy = [ "multi-user.target" ];
-  # Enable kill-switch by default; stop it when VPN is not wanted
-  systemd.services."mullvad-kill-switch".enable = true;
+  # Enable the WireGuard service.
+  networking.wireguard.enable = true;
 
-  # Ensure the private key exists with correct perms
-  environment.etc."var/lib/mullvad/wg_private.key" = {
-    source = privateKeyFile;
+  # Ensure the private key exists with correct permissions.
+  environment.etc."mullvad-private.key" = {
+    text = "<YOUR_PRIVATE_KEY>";
     mode = "0400";
   };
 }
