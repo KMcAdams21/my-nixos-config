@@ -27,6 +27,8 @@
           home-manager.backupFileExtension = "bak";
           home-manager.users.km = import ./home.nix;
         }
+
+        ./modules/config/mullvad.nix
       ];
     };
   };
