@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     spotify
     discord
+    pkgs.qbittorrent
   ];
 
   # Import individual Home Manager modules for specific applications/services
