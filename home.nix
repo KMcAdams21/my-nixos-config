@@ -20,6 +20,7 @@
     ./modules/home-manager/applications/dolphin.nix
     ./modules/home-manager/applications/googleChrome.nix
     ./modules/home-manager/applications/antigravity.nix
+    ./modules/home-manager/applications/onepassword.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
