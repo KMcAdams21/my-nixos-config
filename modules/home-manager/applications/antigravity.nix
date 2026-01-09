@@ -1,22 +1,16 @@
-{ config, pkgs, ... }:
+{ config, pkgs, antigravity-nix, ... }:
 
 {
   home.packages = [
-    pkgs.antigravity-fhs
+    # This automatically includes the FHS environment and Chrome wrappers
+    antigravity-nix.packages.${pkgs.system}.default
   ];
 
   xdg.configFile."antigravity/settings.json".text = builtins.toJSON {
-    "appearance.theme" = "tokyo-night";
-    "agent.auto_approve_commands" = false;
-    "agent.model" = "gemini-3-flash";
-    "telemetry.enabled" = false;
+    "workbench.colorTheme" = "Tokyo Night";
     "editor.fontFamily" = "JetBrains Mono";
+    "agent.auto_approve_commands" = false;
+    # These match the settings you were using in VS Code
+    "gemini.enable" = true; 
   };
-
-  xdg.configFile."antigravity/keybindings.json".text = builtins.toJSON [
-    {
-      "command" = "agent.summon";
-      "key" = "ctrl+space";
-    }
-  ];
 }
