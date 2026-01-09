@@ -7,6 +7,9 @@
     userEmail = "mcadams.kendrick@gmail.com";
     extraConfig = {
       init.defaultBranch = "main";
+      push = {
+        autoSetupRemote = true;
+      };
     };
   };
 }
