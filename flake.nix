@@ -15,9 +15,15 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, antigravity-nix, ... }: {
+  outputs = { self, nixpkgs, home-manager, nur, antigravity-nix, plasma-manager, ... }: {
     nixosConfigurations.my-basic-nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -33,6 +39,9 @@
           home-manager.backupFileExtension = "bak";
           home-manager.users.km = import ./home.nix;
           home-manager.extraSpecialArgs = { inherit antigravity-nix; };
+          home-manager.sharedModules = [
+            plasma-manager.homeManagerModules.plasma-manager
+          ];
         }
       ];
     };
