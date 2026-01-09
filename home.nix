@@ -19,6 +19,7 @@
     ./modules/home-manager/applications/firefox.nix
     ./modules/home-manager/applications/dolphin.nix
     ./modules/home-manager/applications/googleChrome.nix
+    ./modules/home-manager/applications/antigravity.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
