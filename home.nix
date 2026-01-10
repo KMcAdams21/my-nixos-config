@@ -21,7 +21,6 @@
     ./modules/home-manager/applications/googleChrome.nix
     ./modules/home-manager/applications/antigravity.nix
     ./modules/home-manager/applications/onepassword.nix
-    ./modules/home-manager/applications/plasma.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
@@ -29,5 +28,9 @@
 
     # Services
     ./modules/home-manager/low_level/ssh.nix
+
+    # Theme Configuration
+    ./modules/home-manager/low_level/plasma.nix
+    ./modules/home-manager/low_level/theme.nix
   ];
 }

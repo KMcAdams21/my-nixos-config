@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   programs.plasma = {
     enable = true;
@@ -8,6 +7,8 @@
       theme = "breeze-dark";
       colorScheme = "BreezeDark";
       lookAndFeel = "org.kde.breezedark.desktop";
+      iconTheme = "Tela-dark";
+      cursor.theme = "Vimix-cursors";
     };
   };
 }
