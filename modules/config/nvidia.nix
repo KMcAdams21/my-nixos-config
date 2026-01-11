@@ -12,9 +12,26 @@
 
   # NVIDIA-specific configurations
   services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.powerManagement.enable = true;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.open = true;
+
+  hardware.nvidia = {
+    # Enable modesetting - required for Wayland and helps with multi-monitor
+    modesetting.enable = true;
+
+    # Use the open source kernel modules (for newer GPUs)
+    open = true;
+
+    # Power management settings
+    powerManagement = {
+      enable = true;
+      finegrained = false;  # Set to false for desktop, true for laptops with Turing+
+    };
+
+    nvidiaPersistenced = true;
+
+    # Force full composition pipeline can help with screen tearing and 
+    # some wake-from-sleep issues (uncomment if needed)
+    # forceFullCompositionPipeline = true;
+  };
 
   # Allow unfree packages since the NVIDIA driver is proprietary
   nixpkgs.config.allowUnfree = true;
