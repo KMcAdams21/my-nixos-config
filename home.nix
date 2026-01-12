@@ -21,6 +21,7 @@
     ./modules/home-manager/applications/googleChrome.nix
     ./modules/home-manager/applications/antigravity.nix
     ./modules/home-manager/applications/onepassword.nix
+    ./modules/home-manager/applications/prusaslicer.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
