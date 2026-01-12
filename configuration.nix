@@ -81,6 +81,8 @@
     # jack.enable = true;
   };
 
+  programs.noisetorch.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.km = {
     isNormalUser = true;
@@ -103,7 +105,6 @@
     # wget
     git
     xclip
-    noisetorch
   ];
 
   # Open ports in the firewall.
