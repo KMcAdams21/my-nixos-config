@@ -18,6 +18,7 @@
         packages = with pkgs.nur.repos.rycee.firefox-addons; [
           violentmonkey
           onepassword-password-manager
+          tab-wrangler
         ];
       };
     };
