@@ -40,7 +40,7 @@
           home-manager.users.km = import ./home.nix;
           home-manager.extraSpecialArgs = { inherit antigravity-nix; };
           home-manager.sharedModules = [
-            plasma-manager.homeManagerModules.plasma-manager
+            plasma-manager.homeModules.plasma-manager
           ];
         }
       ];
