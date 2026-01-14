@@ -104,7 +104,10 @@
     # wget
     git
     xclip
+    headsetcontrol
   ];
+
+  services.udev.packages = with pkgs; [ headsetcontrol ];
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 57621 ];
