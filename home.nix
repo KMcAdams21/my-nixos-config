@@ -33,5 +33,8 @@
     # Theme Configuration
     ./modules/home-manager/low_level/plasma.nix
     ./modules/home-manager/low_level/theme.nix
+    
+    # Custom Modules
+    ./modules/home-manager/audio-switch.nix
   ];
 }
