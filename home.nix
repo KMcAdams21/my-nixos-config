@@ -22,6 +22,7 @@
     ./modules/home-manager/applications/antigravity.nix
     ./modules/home-manager/applications/onepassword.nix
     ./modules/home-manager/applications/prusaslicer.nix
+    ./modules/home-manager/applications/obsidian.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
