@@ -37,5 +37,6 @@
     
     # Custom Modules
     ./modules/home-manager/audio-switch.nix
+    ./modules/home-manager/noisetorch.nix
   ];
 }

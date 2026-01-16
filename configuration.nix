@@ -23,6 +23,9 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Enable unprivileged user namespaces (required for Electron app sandboxing)
+  security.unprivilegedUsernsClone = true;
+
   # Define your hostname.
   networking.hostName = "nixos";
 
