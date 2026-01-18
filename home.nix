@@ -25,6 +25,7 @@
     ./modules/home-manager/applications/prusaslicer.nix
     ./modules/home-manager/applications/obsidian.nix
     ./modules/home-manager/applications/blender.nix
+    ./modules/home-manager/applications/youtube-music.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
