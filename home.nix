@@ -9,6 +9,7 @@
     spotify
     discord
     pkgs.qbittorrent
+    dnsutils  # provides dig and nslookup
   ];
 
   # Import individual Home Manager modules for specific applications/services
