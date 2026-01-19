@@ -26,6 +26,7 @@
     ./modules/home-manager/applications/obsidian.nix
     ./modules/home-manager/applications/blender.nix
     ./modules/home-manager/applications/youtube-music.nix
+    ./modules/home-manager/applications/r2modman.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
