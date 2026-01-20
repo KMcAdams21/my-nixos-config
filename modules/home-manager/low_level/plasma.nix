@@ -13,7 +13,7 @@
 
     # Custom keyboard shortcuts
     hotkeys.commands = {
-      "Toggle HDR" = {
+      "toggle-hdr" = {
         name = "Toggle HDR";
         comment = "Toggle HDR and Wide Color Gamut on Innocn monitor";
         key = "Meta+H";
