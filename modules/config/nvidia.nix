@@ -8,6 +8,11 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    
+    # Vulkan HDR layer for HDR support in Vulkan applications
+    extraPackages = with pkgs; [
+      vulkan-hdr-layer
+    ];
   };
 
   # NVIDIA-specific configurations
