@@ -24,6 +24,13 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # v4l2loopback for virtual webcam (used by webcam-filters for background blur)
+  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=10 card_label="Virtual Cam" exclusive_caps=1
+  '';
+
   # Enable unprivileged user namespaces (required for Electron app sandboxing)
   security.unprivilegedUsernsClone = true;
 
