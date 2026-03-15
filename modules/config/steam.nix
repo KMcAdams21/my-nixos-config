@@ -12,10 +12,5 @@
 
     # Include proton compatibility packages
     extraCompatPackages = [ pkgs.proton-ge-bin ];
-
-    # Enable Steam + Gamescope session for HDR and better performance
-    gamescopeSession = {
-      enable = true;
-    };
   };
 }

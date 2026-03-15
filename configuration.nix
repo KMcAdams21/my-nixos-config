@@ -14,7 +14,6 @@
       # Import your new, separate modules
       ./modules/config/steam.nix
       ./modules/config/nvidia.nix
-      ./modules/config/gamescope.nix
     ];
 
   # Bootloader.

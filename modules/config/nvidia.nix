@@ -8,14 +8,6 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    
-    # Vulkan HDR layer for HDR support in Vulkan applications (KWin 6 fork)
-    extraPackages = with pkgs; [
-      vulkan-hdr-layer-kwin6
-    ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      vulkan-hdr-layer-kwin6
-    ];
   };
 
   # NVIDIA-specific configurations
