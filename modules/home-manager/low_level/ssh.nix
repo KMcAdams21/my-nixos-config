@@ -1,7 +1,10 @@
 { config, pkgs, ... }:
 
 {
-  programs.ssh.enable = true;
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+  };
 
   # You can uncomment and add specific SSH client settings here if needed
   # programs.ssh.knownHosts = [

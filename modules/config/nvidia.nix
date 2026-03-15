@@ -31,7 +31,7 @@
       finegrained = false;  # Set to false for desktop, true for laptops with Turing+
     };
 
-    nvidiaPersistenced = true;
+    nvidiaPersistenced = false;
 
     # Force full composition pipeline can help with screen tearing and 
     # some wake-from-sleep issues (uncomment if needed)

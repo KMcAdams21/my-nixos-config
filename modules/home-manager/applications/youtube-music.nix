@@ -2,6 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    youtube-music
+    pear-desktop
   ];
 }

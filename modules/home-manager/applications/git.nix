@@ -3,10 +3,14 @@
 {
   programs.git = {
     enable = true;
-    userName = "Kendrick";
-    userEmail = "mcadams.kendrick@gmail.com";
-    extraConfig = {
-      init.defaultBranch = "main";
+    settings = {
+      user = {
+        name = "Kendrick";
+        email = "mcadams.kendrick@gmail.com";
+      };
+      init = {
+        defaultBranch = "main";
+      };
     };
   };
 }

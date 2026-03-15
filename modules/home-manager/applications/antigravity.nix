@@ -3,7 +3,7 @@
 {
   home.packages = [
     # This automatically includes the FHS environment and Chrome wrappers
-    antigravity-nix.packages.${pkgs.system}.default
+    antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   xdg.configFile."antigravity/settings.json".text = builtins.toJSON {
