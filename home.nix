@@ -28,7 +28,7 @@
     ./modules/home-manager/applications/youtube-music.nix
     ./modules/home-manager/applications/r2modman.nix
     ./modules/home-manager/applications/prismlauncher.nix
-    ./modules/home-manager/applications/webcam-filters.nix
+    ./modules/home-manager/applications/obs.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix

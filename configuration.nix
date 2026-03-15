@@ -24,7 +24,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # v4l2loopback for virtual webcam (used by webcam-filters for background blur)
+  # v4l2loopback for virtual webcam (used by OBS virtual camera)
   boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModprobeConfig = ''

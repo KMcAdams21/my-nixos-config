@@ -2,6 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    webcam-filters
+    obs-studio
+    (obs-studio-plugins.obs-backgroundremoval)
   ];
 }
