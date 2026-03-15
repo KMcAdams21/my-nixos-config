@@ -117,6 +117,10 @@
     headsetcontrol
   ];
 
+  environment.sessionVariables = {
+    KWIN_DRM_PREFER_COLOR_DEPTH = "24";
+  };
+
   services.udev.packages = with pkgs; [ headsetcontrol ];
 
   # Open ports in the firewall.

@@ -9,6 +9,15 @@
       ];
       userSettings = {
         "workbench.colorTheme" = "Tokyo Night";
+        "editor.quickSuggestions" = {
+          other = false;
+          comments = false;
+          strings = false;
+        };
+        "editor.acceptSuggestionOnCommitCharacter" = false;
+        "editor.acceptSuggestionOnEnter" = "off";
+        "editor.suggestOnTriggerCharacters" = false;
+        "editor.wordBasedSuggestions" = "off";
       };
     };
   };
