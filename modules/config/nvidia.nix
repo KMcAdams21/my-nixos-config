@@ -13,6 +13,9 @@
     extraPackages = with pkgs; [
       vulkan-hdr-layer-kwin6
     ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      vulkan-hdr-layer-kwin6
+    ];
   };
 
   # NVIDIA-specific configurations
