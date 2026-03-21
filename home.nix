@@ -29,6 +29,7 @@
     ./modules/home-manager/applications/r2modman.nix
     ./modules/home-manager/applications/prismlauncher.nix
     ./modules/home-manager/applications/obs.nix
+    ./modules/home-manager/applications/owocr.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
