@@ -107,6 +107,45 @@
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "km";
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+  ];
+
+  # Prefer Japanese glyph variants over Chinese for CJK characters
+  fonts.fontconfig.localConf = ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+    <fontconfig>
+      <alias>
+        <family>sans-serif</family>
+        <prefer>
+          <family>Noto Sans CJK JP</family>
+          <family>Noto Sans CJK KR</family>
+          <family>Noto Sans CJK SC</family>
+        </prefer>
+      </alias>
+      <alias>
+        <family>serif</family>
+        <prefer>
+          <family>Noto Serif CJK JP</family>
+          <family>Noto Serif CJK KR</family>
+          <family>Noto Serif CJK SC</family>
+        </prefer>
+      </alias>
+      <alias>
+        <family>monospace</family>
+        <prefer>
+          <family>Noto Sans Mono CJK JP</family>
+          <family>Noto Sans Mono CJK KR</family>
+          <family>Noto Sans Mono CJK SC</family>
+        </prefer>
+      </alias>
+    </fontconfig>
+  '';
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
