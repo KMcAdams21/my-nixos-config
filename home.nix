@@ -30,6 +30,7 @@
     ./modules/home-manager/applications/prismlauncher.nix
     ./modules/home-manager/applications/obs.nix
     ./modules/home-manager/applications/owocr.nix
+    ./modules/home-manager/applications/anki.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
