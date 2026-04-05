@@ -26,8 +26,8 @@ _CIRCLE = [
 def add_args(parser):
     parser.add_argument("--sneak", action="store_true",
                         help="Hold Ctrl (sneak) the whole time")
-    parser.add_argument("--step-ms", type=int, default=400, metavar="N",
-                        help="Duration per directional step in ms (default: 400)")
+    parser.add_argument("--step-ms", type=int, default=200, metavar="N",
+                        help="Duration per directional step in ms (default: 200)")
 
 
 class Bot:
