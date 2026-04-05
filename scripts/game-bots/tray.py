@@ -233,9 +233,10 @@ class TrayApp:
     # ── Slots ─────────────────────────────────────────────────────────────────
 
     def _on_activated(self, reason):
-        # Left-click shows menu (right-click already does by default on most DEs)
+        # On Wayland, manual popup() grabs fail — rely on KDE's native right-click handling.
+        # Left-click will just toggle the bot as a convenience.
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            self.tray.contextMenu().popup(self.tray.geometry().bottomLeft())
+            self.manager.toggle()
 
     def _select_bot(self, name: str):
         self._selected_bot = name
