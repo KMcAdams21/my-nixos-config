@@ -158,6 +158,15 @@ class TrayApp:
 
         self._build_menu()
         self.tray.show()
+        print("[game-bot] Tray icon shown — look for it in your system tray (check the hidden icons '^' arrow in KDE)")
+
+        # Pop a notification so you can find the icon
+        self.tray.showMessage(
+            "Game Bot Ready",
+            "Select a bot and press F8 to start. Right-click the tray icon for options.",
+            QSystemTrayIcon.MessageIcon.Information,
+            4000,
+        )
 
         self.signals.status_changed.connect(self._on_status_changed)
         self._start_hotkey_listener()
@@ -270,14 +279,27 @@ class TrayApp:
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
+    import signal
+    from PyQt6.QtCore import QTimer
+
+    print("[game-bot] Starting tray app...")
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)  # stay alive when no windows open
 
+    # Allow Ctrl+C to work — Qt blocks SIGINT by default
+    signal.signal(signal.SIGINT, lambda *_: app.quit())
+    # QTimer lets Python check signals every 500ms while Qt event loop runs
+    sigint_timer = QTimer()
+    sigint_timer.start(500)
+    sigint_timer.timeout.connect(lambda: None)
+
+    print(f"[game-bot] System tray available: {QSystemTrayIcon.isSystemTrayAvailable()}")
     if not QSystemTrayIcon.isSystemTrayAvailable():
-        print("No system tray available on this desktop.")
+        print("[game-bot] ERROR: No system tray available on this desktop.")
         sys.exit(1)
 
     _tray = TrayApp(app)
+    print("[game-bot] Running. Ctrl+C to quit.")
     sys.exit(app.exec())
 
 
