@@ -13,8 +13,8 @@ import importlib
 import argparse
 from pathlib import Path
 
-from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QActionGroup
-from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor, QAction
+from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor, QAction, QActionGroup
 from PyQt6.QtCore import Qt, pyqtSignal, QObject
 
 BOTS_DIR = Path(__file__).parent / "bots"
