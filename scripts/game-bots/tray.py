@@ -2,8 +2,8 @@
 """
 game-bot-tray — System tray GUI for the game bot runner.
 
-Select a bot from the tray menu, configure its options,
-then press F8 to toggle it on/off. The CLI runner still
+Select a bot from the tray menu, open ⚙ Settings to configure its
+parameters, then press F8 to toggle it on/off. The CLI runner still
 works independently alongside this.
 """
 
@@ -13,7 +13,11 @@ import importlib
 import argparse
 from pathlib import Path
 
-from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PyQt6.QtWidgets import (
+    QApplication, QSystemTrayIcon, QMenu,
+    QDialog, QDialogButtonBox, QFormLayout, QVBoxLayout,
+    QSpinBox, QDoubleSpinBox, QCheckBox, QLineEdit,
+)
 from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor, QAction, QActionGroup
 from PyQt6.QtCore import Qt, pyqtSignal, QObject
 
@@ -21,7 +25,7 @@ BOTS_DIR = Path(__file__).parent / "bots"
 sys.path.insert(0, str(BOTS_DIR))
 
 
-# ── Icon helpers (must be called after QApplication exists) ───────────────────
+# ── Icon helpers ───────────────────────────────────────────────────────────────
 
 def make_icon(color: str, size: int = 20) -> QIcon:
     px = QPixmap(size, size)
@@ -35,7 +39,7 @@ def make_icon(color: str, size: int = 20) -> QIcon:
     return QIcon(px)
 
 
-# ── Bot discovery ─────────────────────────────────────────────────────────────
+# ── Bot discovery ──────────────────────────────────────────────────────────────
 
 def discover_bots() -> list[str]:
     return sorted(
@@ -44,8 +48,8 @@ def discover_bots() -> list[str]:
     )
 
 
-def get_bool_flags(bot_name: str) -> list[tuple[str, str, str]]:
-    """Return (dest, flag, help) for each boolean flag the bot declares."""
+def get_all_args(bot_name: str) -> list[dict]:
+    """Return every declared arg with its type, default, and help text."""
     try:
         mod = importlib.import_module(bot_name)
     except Exception:
@@ -54,11 +58,94 @@ def get_bool_flags(bot_name: str) -> list[tuple[str, str, str]]:
         return []
     parser = argparse.ArgumentParser()
     mod.add_args(parser)
-    return [
-        (a.dest, a.option_strings[0], a.help or "")
-        for a in parser._actions
-        if a.option_strings and getattr(a, "const", None) is True
-    ]
+    result = []
+    for action in parser._actions:
+        if not action.option_strings or action.dest == "help":
+            continue
+        is_bool = getattr(action, "const", None) is True
+        arg_type = (
+            "bool"  if is_bool else
+            "int"   if action.type is int else
+            "float" if action.type is float else
+            "str"
+        )
+        result.append({
+            "dest":    action.dest,
+            "flag":    action.option_strings[0],
+            "help":    action.help or "",
+            "type":    arg_type,
+            "default": action.default,
+        })
+    return result
+
+
+# ── Settings dialog ────────────────────────────────────────────────────────────
+
+class SettingsDialog(QDialog):
+    """
+    Auto-builds a form from a bot's declared argparse args.
+    Bool   → QCheckBox
+    Int    → QSpinBox
+    Float  → QDoubleSpinBox
+    Str    → QLineEdit
+    """
+
+    def __init__(self, bot_name: str, current_values: dict, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(f"⚙  {bot_name} — Settings")
+        self.setMinimumWidth(400)
+
+        args = get_all_args(bot_name)
+        self._widgets: dict[str, tuple] = {}
+
+        form = QFormLayout()
+        form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+        form.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
+
+        for arg in args:
+            dest    = arg["dest"]
+            current = current_values.get(dest, arg["default"])
+            tip     = arg["help"]
+
+            if arg["type"] == "bool":
+                w = QCheckBox()
+                w.setChecked(bool(current))
+            elif arg["type"] == "int":
+                w = QSpinBox()
+                w.setRange(0, 99_999)
+                w.setValue(int(current) if current is not None else 0)
+            elif arg["type"] == "float":
+                w = QDoubleSpinBox()
+                w.setRange(0.0, 99_999.0)
+                w.setDecimals(2)
+                w.setValue(float(current) if current is not None else 0.0)
+            else:
+                w = QLineEdit(str(current or ""))
+
+            w.setToolTip(tip)
+            form.addRow(arg["flag"], w)
+            self._widgets[dest] = (w, arg["type"])
+
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok |
+            QDialogButtonBox.StandardButton.Cancel
+        )
+        btns.accepted.connect(self.accept)
+        btns.rejected.connect(self.reject)
+
+        layout = QVBoxLayout()
+        layout.addLayout(form)
+        layout.addWidget(btns)
+        self.setLayout(layout)
+
+    def get_values(self) -> dict:
+        result = {}
+        for dest, (w, type_name) in self._widgets.items():
+            if   type_name == "bool":  result[dest] = w.isChecked()
+            elif type_name == "int":   result[dest] = w.value()
+            elif type_name == "float": result[dest] = w.value()
+            else:                      result[dest] = w.text()
+        return result
 
 
 # ── Bot runner (background thread) ────────────────────────────────────────────
@@ -78,7 +165,6 @@ class BotManager:
         self.bot_args: dict       = {}
 
     def select(self, bot_name: str, args: dict):
-        """Swap to a new bot; restarts it if currently running."""
         was_running = self.active
         if was_running:
             self._stop()
@@ -94,8 +180,6 @@ class BotManager:
             else:
                 self._start()
         self.signals.status_changed.emit(self.active)
-
-    # ── private ───────────────────────────────────────────────────────────────
 
     def _start(self):
         if not self.bot_name:
@@ -141,16 +225,13 @@ class TrayApp:
         self.signals = Signals()
         self.manager = BotManager(self.signals)
 
-        self._selected_bot: str | None = None
-        self._bot_flags: dict          = {}
-        self._flag_actions: list[QAction] = []
+        self._selected_bot: str | None     = None
+        self._bot_args:     dict           = {}          # current settings
         self._bot_actions:  dict[str, QAction] = {}
 
-        # Icons created after QApplication exists
         self._icon_paused  = make_icon("#777777")
         self._icon_running = make_icon("#44cc44")
 
-        # Build tray icon
         self.tray = QSystemTrayIcon()
         self.tray.setIcon(self._icon_paused)
         self.tray.setToolTip("Game Bot — PAUSED")
@@ -158,12 +239,11 @@ class TrayApp:
 
         self._build_menu()
         self.tray.show()
-        print("[game-bot] Tray icon shown — look for it in your system tray (check the hidden icons '^' arrow in KDE)")
+        print("[game-bot] Tray icon shown — check the hidden icons '^' arrow in KDE if you don't see it")
 
-        # Pop a notification so you can find the icon
         self.tray.showMessage(
             "Game Bot Ready",
-            "Select a bot and press F8 to start. Right-click the tray icon for options.",
+            "Right-click the tray icon to select a bot and open Settings.",
             QSystemTrayIcon.MessageIcon.Information,
             4000,
         )
@@ -176,13 +256,12 @@ class TrayApp:
     def _build_menu(self):
         self.menu = QMenu()
 
-        # Header
         hdr = self.menu.addAction("🎮 Game Bot Runner")
         hdr.setEnabled(False)
         self.menu.addSeparator()
 
-        # Bot radio buttons
-        bots = discover_bots()
+        # Bot selection (radio)
+        bots  = discover_bots()
         group = QActionGroup(self.menu)
         group.setExclusive(True)
         for name in bots:
@@ -192,11 +271,15 @@ class TrayApp:
             self.menu.addAction(act)
             self._bot_actions[name] = act
 
-        # Flags will be inserted between these two separators
         self.menu.addSeparator()
-        self._flags_insert_point = self.menu.addSeparator()  # flags go before this
 
-        # Status + hint
+        # Settings button — opens SettingsDialog for the selected bot
+        self._settings_act = self.menu.addAction("⚙  Settings…")
+        self._settings_act.triggered.connect(self._open_settings)
+        self._settings_act.setEnabled(False)  # enabled once a bot is selected
+
+        self.menu.addSeparator()
+
         self._status_act = self.menu.addAction("⏸  PAUSED")
         self._status_act.setEnabled(False)
         hint = self.menu.addAction("Press F8 to toggle")
@@ -207,46 +290,35 @@ class TrayApp:
 
         self.tray.setContextMenu(self.menu)
 
-        # Select first bot by default
         if bots:
             self._bot_actions[bots[0]].setChecked(True)
             self._select_bot(bots[0])
 
-    def _rebuild_flags(self):
-        # Remove old flag actions from menu
-        for act in self._flag_actions:
-            self.menu.removeAction(act)
-        self._flag_actions.clear()
-
-        if not self._selected_bot:
-            return
-
-        for dest, flag, help_text in get_bool_flags(self._selected_bot):
-            label = f"{flag}" + (f"  —  {help_text}" if help_text else "")
-            act = QAction(label, self.menu, checkable=True)
-            act.setChecked(self._bot_flags.get(dest, False))
-            act.triggered.connect(lambda checked, d=dest: self._set_flag(d, checked))
-            # Insert before the closing separator
-            self.menu.insertAction(self._flags_insert_point, act)
-            self._flag_actions.append(act)
-
     # ── Slots ─────────────────────────────────────────────────────────────────
 
     def _on_activated(self, reason):
-        # On Wayland, manual popup() grabs fail — rely on KDE's native right-click handling.
-        # Left-click will just toggle the bot as a convenience.
+        # Left-click: toggle bot. Right-click: KDE shows context menu natively.
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
             self.manager.toggle()
 
     def _select_bot(self, name: str):
         self._selected_bot = name
-        self._bot_flags    = {}
-        self._rebuild_flags()
-        self.manager.select(name, {})
+        # Seed _bot_args with the bot's declared defaults
+        self._bot_args = {
+            a["dest"]: a["default"]
+            for a in get_all_args(name)
+        }
+        self._settings_act.setEnabled(True)
+        self._settings_act.setText(f"⚙  Settings…  ({name})")
+        self.manager.select(name, dict(self._bot_args))
 
-    def _set_flag(self, dest: str, value: bool):
-        self._bot_flags[dest] = value
-        self.manager.select(self._selected_bot, dict(self._bot_flags))
+    def _open_settings(self):
+        if not self._selected_bot:
+            return
+        dlg = SettingsDialog(self._selected_bot, self._bot_args)
+        if dlg.exec() == QDialog.DialogCode.Accepted:
+            self._bot_args = dlg.get_values()
+            self.manager.select(self._selected_bot, dict(self._bot_args))
 
     def _on_status_changed(self, active: bool):
         if active:
@@ -285,18 +357,16 @@ def main():
 
     print("[game-bot] Starting tray app...")
     app = QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False)  # stay alive when no windows open
+    app.setQuitOnLastWindowClosed(False)
 
-    # Allow Ctrl+C to work — Qt blocks SIGINT by default
     signal.signal(signal.SIGINT, lambda *_: app.quit())
-    # QTimer lets Python check signals every 500ms while Qt event loop runs
     sigint_timer = QTimer()
     sigint_timer.start(500)
     sigint_timer.timeout.connect(lambda: None)
 
     print(f"[game-bot] System tray available: {QSystemTrayIcon.isSystemTrayAvailable()}")
     if not QSystemTrayIcon.isSystemTrayAvailable():
-        print("[game-bot] ERROR: No system tray available on this desktop.")
+        print("[game-bot] ERROR: No system tray available.")
         sys.exit(1)
 
     _tray = TrayApp(app)
