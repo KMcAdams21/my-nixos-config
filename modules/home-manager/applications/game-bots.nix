@@ -3,8 +3,10 @@
 let
   # All Python deps come from nixpkgs — no pip needed
   pythonEnv = pkgs.python3.withPackages (ps: [
-    ps.pynput   # keyboard simulation (used by both CLI and tray)
+    ps.pynput   # keyboard + mouse simulation (used by all bots)
     ps.pyqt6    # system tray GUI
+    ps.mss      # screen capture (fishing bot)
+    ps.numpy    # frame differencing (fishing bot)
   ]);
 
   botSrc = "${config.home.homeDirectory}/nixos-config/scripts/game-bots";
