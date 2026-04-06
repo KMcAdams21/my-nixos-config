@@ -7,6 +7,7 @@ let
     ps.pyqt6    # system tray GUI
     ps.mss      # screen capture (fishing bot)
     ps.numpy    # frame differencing (fishing bot)
+    ps.pillow   # PNG save for --test-capture diagnostic
   ]);
 
   botSrc = "${config.home.homeDirectory}/nixos-config/scripts/game-bots";

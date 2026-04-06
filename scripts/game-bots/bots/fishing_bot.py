@@ -79,7 +79,12 @@ def add_args(parser):
     )
     parser.add_argument(
         "--debug", action="store_true",
-        help="Print detected direction to terminal each tick.",
+        help="Print detected direction + motion pixel count each tick.",
+    )
+    parser.add_argument(
+        "--test-capture", action="store_true",
+        help="Save one screenshot to /tmp/fishing_capture.png and exit. "
+             "Run this first to verify mss can see your game.",
     )
 
 
@@ -123,50 +128,41 @@ def _detect_direction(
     motion_thresh: int,
     cx: int,
     cy: int,
+    debug: bool = False,
 ) -> str | None:
     """
-    Returns compass direction the motion is heading, or None if still.
-
-    Strategy:
-    - Compute per-pixel max-channel delta between frames.
-    - Threshold to get a binary 'changed' mask.
-    - If fewer than motion_thresh pixels changed → still (None).
-    - Otherwise compute centroid of changed pixels.
-    - Direction = centroid offset from region center, mapped to 8 compass dirs.
+    Returns compass direction the motion centroid is heading, or None if still.
     """
     diff = np.max(np.abs(curr.astype(np.int16) - prev.astype(np.int16)), axis=2)
     mask = diff > pixel_thresh
 
     n_changed = int(mask.sum())
+    if debug:
+        print(f"[fishing] changed_px={n_changed}  thresh={motion_thresh}", end="  ")
+
     if n_changed < motion_thresh:
-        return None          # nothing moving
+        return None
 
     ys, xs = np.where(mask)
     centroid_x = float(xs.mean()) - cx
     centroid_y = float(ys.mean()) - cy   # positive = downward on screen
 
-    # Dead-zone: if centroid very close to centre, treat as still
+    # Dead-zone: centroid very close to centre
     if abs(centroid_x) < cx * 0.1 and abs(centroid_y) < cy * 0.1:
         return None
 
-    # Map vector to 8 directions
-    angle_deg = np.degrees(np.arctan2(centroid_y, centroid_x))
-    # arctan2: 0=right(E), 90=down(S), ±180=left(W), -90=up(N)
-    dirs = [
-        (  -22.5, "E"),
-        (   22.5, "SE"),
-        (   67.5, "S"),
-        (  112.5, "SW"),
-        (  157.5, "W"),
-        ( -157.5, "NW"),
-        ( -112.5, "N"),
-        (  -67.5, "NE"),
-        (  -22.5, "E"),   # wrap-around sentinel
-    ]
-    for bound, label in dirs:
-        if angle_deg <= bound:
-            return label
-    return "E"  # fallback
+    # Proper range-based direction mapping
+    # arctan2 convention: 0°=right(E), 90°=down(S), ±180°=left(W), -90°=up(N)
+    a = float(np.degrees(np.arctan2(centroid_y, centroid_x)))
+
+    if   -22.5 <= a <  22.5:  return "E"
+    elif  22.5 <= a <  67.5:  return "SE"
+    elif  67.5 <= a < 112.5:  return "S"
+    elif 112.5 <= a < 157.5:  return "SW"
+    elif a >= 157.5 or a < -157.5: return "W"
+    elif -157.5 <= a < -112.5: return "NW"
+    elif -112.5 <= a <  -67.5: return "N"
+    else:                      return "NE"   # -67.5 <= a < -22.5
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -196,6 +192,7 @@ class Bot:
         self._still_count           = 0
 
         self._frame_interval = 1.0 / max(1, self.fps)
+        self._stop_event = threading.Event()
 
         # mss instance kept open during run (opened in start())
         self._sct:    "mss.mss | None"    = None
@@ -207,31 +204,44 @@ class Bot:
     # ── lifecycle ─────────────────────────────────────────────────────────────
 
     def start(self):
-        import mss
+        import mss as _mss
+        self._stop_event.clear()
         self._running     = True
         self._still_count = 0
         self._reeling     = False
         self._prev_frame  = None
 
         self._region, self._cx, self._cy = _get_center_region(self.region_pct)
-        self._sct = mss.mss()
+        self._sct = _mss.mss()
 
-        if self.debug:
+        # --test-capture: save one frame then bail
+        if self.debug or getattr(self, 'test_capture', False):
             print(
-                f"[fishing] Capturing region: {self._region} | "
+                f"[fishing] Capture region: {self._region}  "
                 f"centre=({self._cx},{self._cy})"
             )
-
-    def stop(self):
-        self._running = False
-        self._release_all()
-        if self._sct:
+        if getattr(self, 'test_capture', False):
+            from PIL import Image
+            frame = _capture(self._sct, self._region)
+            path = "/tmp/fishing_capture.png"
+            Image.fromarray(frame[:, :, ::-1]).save(path)   # BGR->RGB
+            print(f"[fishing] Screenshot saved to {path} — open it to verify the game is visible.")
             self._sct.close()
             self._sct = None
 
-    def tick(self):
-        t0 = time.monotonic()
+    def stop(self):
+        """Signal the tick loop to stop. BotManager joins the thread before cleanup."""
+        self._running = False
+        self._stop_event.set()
+        self._release_all()
+        # Don't close _sct here — tick() may still be in a capture call.
+        # BotManager.join() ensures the thread exits first.
 
+    def tick(self):
+        if self._stop_event.is_set() or self._sct is None:
+            return
+
+        t0 = time.monotonic()
         curr = _capture(self._sct, self._region)
 
         if self._prev_frame is None:
@@ -243,6 +253,7 @@ class Bot:
             self._prev_frame, curr,
             self.pixel_thresh, self.motion_thresh,
             self._cx, self._cy,
+            debug=self.debug,
         )
         self._prev_frame = curr
 
