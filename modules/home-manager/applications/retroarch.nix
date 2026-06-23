@@ -2,8 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    (retroarch.override {
-      cores = with libretro; [
+    (retroarch.withCores (cores: with cores; [
         # Nintendo DS
         desmume
         melonds
@@ -30,7 +29,7 @@
         # Arcade
         mame
         fbneo
-      ];
-    })
+      ]))
+
   ];
 }
