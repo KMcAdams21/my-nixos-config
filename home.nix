@@ -28,6 +28,8 @@
     ./modules/home-manager/applications/youtube-music.nix
     ./modules/home-manager/applications/r2modman.nix
     ./modules/home-manager/applications/prismlauncher.nix
+    ./modules/home-manager/applications/melonDS.nix
+    ./modules/home-manager/applications/retroarch.nix
     ./modules/home-manager/applications/obs.nix
     ./modules/home-manager/applications/owocr.nix
     ./modules/home-manager/applications/anki.nix
