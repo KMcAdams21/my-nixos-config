@@ -2,7 +2,7 @@
   description = "My Basic NixOS Config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/cb369ef2efd432b3cdf8622b0ffc0a97a02f3137";
+    nixpkgs.url = "path:/nix/store/w8w3fia26p35xays42lixahnzigsl8dv-source";
     
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -27,7 +27,13 @@
     nixosConfigurations.my-basic-nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        ({ nixpkgs.overlays = [ nur.overlays.default ]; })
+        ({ nixpkgs.overlays = [
+          nur.overlays.default
+          antigravity-nix.overlays.default
+          (final: prev: {
+            antigravity = final.google-antigravity;
+          })
+        ]; })
         { nixpkgs.config.allowUnfree = true; }
         
         ./configuration.nix
@@ -38,7 +44,6 @@
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
           home-manager.users.km = import ./home.nix;
-          home-manager.extraSpecialArgs = { inherit antigravity-nix; };
           home-manager.sharedModules = [
             plasma-manager.homeModules.plasma-manager
           ];
