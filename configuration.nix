@@ -92,22 +92,19 @@
 
   programs.noisetorch.enable = true;
 
-  # Define a user account. Blank password: SDDM still runs the real
-  # login/PAM flow (so pam_kwallet unlocks KWallet, fixing Discord/Antigravity
-  # getting logged out on every boot), you just don't have to type anything.
+  # Define a user account. Don't forget to set a password with 'passwd'.
+  # No autoLogin: SDDM needs the real login/PAM flow to run so pam_kwallet
+  # unlocks KWallet with your password. That's what was fixing
+  # Discord/Antigravity getting logged out on every boot.
   users.users.km = {
     isNormalUser = true;
     description = "km";
-    hashedPassword = "";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
     ];
   };
-
-  # Allow logging in with a blank password on the greeter's PAM stack.
-  security.pam.services.login.allowNullPassword = true;
 
   # Fonts
   fonts.packages = with pkgs; [
