@@ -92,10 +92,13 @@
 
   programs.noisetorch.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Blank password: SDDM still runs the real
+  # login/PAM flow (so pam_kwallet unlocks KWallet, fixing Discord/Antigravity
+  # getting logged out on every boot), you just don't have to type anything.
   users.users.km = {
     isNormalUser = true;
     description = "km";
+    hashedPassword = "";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       kdePackages.kate
@@ -103,9 +106,8 @@
     ];
   };
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "km";
+  # Allow logging in with a blank password on the greeter's PAM stack.
+  security.pam.services.login.allowNullPassword = true;
 
   # Fonts
   fonts.packages = with pkgs; [
