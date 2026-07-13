@@ -92,7 +92,10 @@
 
   programs.noisetorch.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
+  # No autoLogin: SDDM needs the real login/PAM flow to run so pam_kwallet
+  # unlocks KWallet with your password. That's what was fixing
+  # Discord/Antigravity getting logged out on every boot.
   users.users.km = {
     isNormalUser = true;
     description = "km";
@@ -102,10 +105,6 @@
     #  thunderbird
     ];
   };
-
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "km";
 
   # Fonts
   fonts.packages = with pkgs; [
