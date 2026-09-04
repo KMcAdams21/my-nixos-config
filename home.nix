@@ -3,7 +3,7 @@
 {
   home.username = "km";
   home.homeDirectory = "/home/km";
-  home.stateVersion = "25.11"; # Make sure this matches your NixOS version
+  home.stateVersion = "26.05"; # Make sure this matches your NixOS version
 
   home.packages = with pkgs; [
     spotify

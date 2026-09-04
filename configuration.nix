@@ -39,6 +39,11 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Map homeassistant.local directly to IPv4 address
+  networking.extraHosts = ''
+    192.168.0.24 homeassistant.local
+  '';
+
   nix = {
     package = pkgs.nixVersions.stable;
     extraOptions = ''
@@ -96,7 +101,7 @@
   users.users.km = {
     isNormalUser = true;
     description = "km";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "uucp" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
@@ -154,6 +159,7 @@
     git
     xclip
     headsetcontrol
+    opencode
   ];
 
   environment.sessionVariables = {

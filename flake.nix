@@ -2,10 +2,10 @@
   description = "My Basic NixOS Config";
 
   inputs = {
-    nixpkgs.url = "path:/nix/store/w8w3fia26p35xays42lixahnzigsl8dv-source";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
