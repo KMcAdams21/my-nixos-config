@@ -20,8 +20,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Use standard stable kernel (linuxPackages_latest kernel 7.2 has compilation issues with nvidia-open driver)
+  boot.kernelPackages = pkgs.linuxPackages;
 
   # v4l2loopback for virtual webcam (used by OBS virtual camera)
   boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
