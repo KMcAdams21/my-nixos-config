@@ -10,7 +10,14 @@
     discord
     pkgs.qbittorrent
     dnsutils  # provides dig and nslookup
+    uv
+    python3
   ];
+
+  # uv must not download generic-CPython builds on NixOS; use the nix python
+  home.sessionVariables = {
+    UV_PYTHON_DOWNLOADS = "never";
+  };
 
   # Import individual Home Manager modules for specific applications/services
   imports = [
