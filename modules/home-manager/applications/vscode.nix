@@ -6,9 +6,11 @@
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
         enkia.tokyo-night
+        geequlim.godot-tools
       ];
       userSettings = {
         "workbench.colorTheme" = "Tokyo Night";
+        "godotTools.editorPath" = "${pkgs.godot}/bin/godot";
         "editor.quickSuggestions" = {
           other = false;
           comments = false;

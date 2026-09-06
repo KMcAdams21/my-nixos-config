@@ -40,6 +40,7 @@
     ./modules/home-manager/applications/obs.nix
     ./modules/home-manager/applications/owocr.nix
     ./modules/home-manager/applications/anki.nix
+    ./modules/home-manager/applications/godot.nix
     ./modules/home-manager/applications/game-bots.nix
 
     # Shell Configuration
