@@ -161,6 +161,17 @@
     opencode
   ];
 
+  # Auto-install LeetBuddy (Chrome extension) from the Web Store.
+  environment.etc."opt/chrome/policies/managed/leetbuddy.json".text = ''
+    {
+      "ExtensionSettings": {
+        "eoelobfmmfdopfgacemfebnhkchfaohg": {
+          "installation_mode": "normal"
+        }
+      }
+    }
+  '';
+
   environment.sessionVariables = {
     KWIN_DRM_PREFER_COLOR_DEPTH = "24";
   };
