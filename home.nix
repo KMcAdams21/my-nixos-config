@@ -42,6 +42,7 @@
     ./modules/home-manager/applications/anki.nix
     ./modules/home-manager/applications/godot.nix
     ./modules/home-manager/applications/game-bots.nix
+    ./modules/home-manager/applications/whisper.nix
 
     # Shell Configuration
     ./modules/home-manager/low_level/bash.nix
