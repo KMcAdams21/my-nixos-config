@@ -74,6 +74,10 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  # Unlock KWallet automatically at SDDM login via pam_kwallet.
+  # Requires the wallet's password to match the user's login password.
+  security.pam.services.sddm.kwallet.enable = true;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";

@@ -11,6 +11,16 @@
       cursor.theme = "Vimix-cursors";
     };
 
+    # KWallet: enabled, and never auto-close wallets on inactivity.
+    # (pam_kwallet in configuration.nix unlocks it at login.)
+    configFile."kwalletrc" = {
+      Wallet = {
+        Enabled = "true";
+        "First Use" = "false";
+        "Close on inactivity" = "false";
+      };
+    };
+
     # Custom keyboard shortcuts
     hotkeys.commands = {
       "toggle-hdr" = {
