@@ -104,7 +104,7 @@
   users.users.km = {
     isNormalUser = true;
     description = "km";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "uucp" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "uucp" "input" "ydotool" ];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
@@ -159,6 +159,7 @@
     xclip
     headsetcontrol
     opencode
+    whisper-dictation
   ];
 
   # Auto-install LeetBuddy (Chrome extension) from the Web Store.
@@ -176,6 +177,10 @@
   environment.sessionVariables = {
     KWIN_DRM_PREFER_COLOR_DEPTH = "24";
   };
+
+  # ydotool daemon + socket so whisper-dictation can inject typed text
+  # (Wayland-safe; xdotool/wtype cannot focus-inject under a compositor).
+  programs.ydotool.enable = true;
 
   services.udev.packages = with pkgs; [ headsetcontrol ];
 

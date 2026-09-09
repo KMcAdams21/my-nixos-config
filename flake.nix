@@ -16,6 +16,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    whisper-dictation = {
+      url = "github:jacopone/whisper-dictation";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,7 +28,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nur, antigravity-nix, plasma-manager, ... }: {
+  outputs = { self, nixpkgs, home-manager, nur, antigravity-nix, plasma-manager, whisper-dictation, ... }: {
     nixosConfigurations.my-basic-nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -32,6 +37,9 @@
           antigravity-nix.overlays.default
           (final: prev: {
             antigravity = final.google-antigravity;
+          })
+          (final: prev: {
+            whisper-dictation = whisper-dictation.packages.${prev.system}.default;
           })
         ]; })
         { nixpkgs.config.allowUnfree = true; }

@@ -19,12 +19,6 @@
         key = "Meta+H";
         command = "/home/km/nixos-config/scripts/toggle-hdr.sh";
       };
-      "dictate" = {
-        name = "Dictate";
-        comment = "Start/stop Whisper dictation and type the transcript";
-        key = "Meta+Z";
-        command = "/home/km/nixos-config/scripts/dictate.sh";
-      };
     };
   };
 }
