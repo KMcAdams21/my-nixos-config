@@ -178,10 +178,6 @@
     }
   '';
 
-  environment.sessionVariables = {
-    KWIN_DRM_PREFER_COLOR_DEPTH = "24";
-  };
-
   # ydotool daemon + socket so whisper-dictation can inject typed text
   # (Wayland-safe; xdotool/wtype cannot focus-inject under a compositor).
   programs.ydotool.enable = true;
