@@ -46,6 +46,7 @@
         
         ./configuration.nix
         ./modules/config/mullvad.nix
+        ./modules/config/plex.nix
 
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
