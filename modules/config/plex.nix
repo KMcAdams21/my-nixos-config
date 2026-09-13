@@ -12,6 +12,7 @@
   # Bind-mount the Plex folder at a path the service can read.
   fileSystems."/Plex" = {
     device = "/home/km/Plex";
+    fsType = "none";
     options = [ "bind" ];
   };
 }
