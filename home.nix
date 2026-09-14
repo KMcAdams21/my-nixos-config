@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     spotify
     discord
+    lyrebird
     pkgs.qbittorrent
     dnsutils  # provides dig and nslookup
     uv
