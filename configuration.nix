@@ -163,6 +163,7 @@
     xclip
     headsetcontrol
     opencode
+    opencode-desktop
     whisper-dictation
   ];
 
