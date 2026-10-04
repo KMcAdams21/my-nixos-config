@@ -16,6 +16,10 @@
       ./modules/config/nvidia.nix
     ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-41.10.7"
+  ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
