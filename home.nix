@@ -7,7 +7,6 @@
 
   home.packages = with pkgs; [
     spotify
-    discord
     lyrebird
     pkgs.qbittorrent
     dnsutils  # provides dig and nslookup
@@ -38,6 +37,7 @@
     ./modules/home-manager/applications/prismlauncher.nix
     ./modules/home-manager/applications/melonDS.nix
     ./modules/home-manager/applications/retroarch.nix
+    ./modules/home-manager/applications/vesktop.nix
     ./modules/home-manager/applications/obs.nix
     ./modules/home-manager/applications/owocr.nix
     ./modules/home-manager/applications/anki.nix
